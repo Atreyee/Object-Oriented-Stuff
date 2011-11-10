@@ -1,0 +1,5 @@
+require File.join(File.dirname(__FILE__), "..","src","car")
+
+describe "Garage" do
+
+end

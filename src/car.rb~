@@ -1,0 +1,9 @@
+class Car
+
+  attr_accessor :location
+
+  def park(location)
+    @location = location
+    true
+  end
+end
