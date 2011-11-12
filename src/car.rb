@@ -1,18 +1,19 @@
 class Car
 
-  attr_accessor :location
+  attr_accessor :garage
 
-  def park(location)
+  def park(garage)
     raise 'Car already parked!' if parked?
-    @location = location
+    @garage = garage
   end
 
   def retrieve
     raise 'Car not parked!' if !parked?
-    @location = ""
+    @garage.remove_car(self)
+    @garage = nil
   end
 
   def parked?
-    @location && !@location.empty?
+    !@garage.nil?
   end
 end

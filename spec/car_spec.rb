@@ -1,34 +1,38 @@
 require File.join(File.dirname(__FILE__), "..","src","car")
 
 describe Car do
+
+  before :each do
+    @garage = Garage.new(2)
+  end
+
   it "should be capable of being parked" do
     car = Car.new
-    car.park("Panchsheel Tech Park")
+    car.park(@garage)
 
     car.parked?.should be_true
-    car.location.should == "Panchsheel Tech Park"
+    car.garage.should == @garage
 
     car.retrieve
-    car.park("City Pride Kothrud")
 
+    car.park(@garage)
     car.parked?.should be_true
-    car.location.should == "City Pride Kothrud"
   end
 
   it "should not be able to park a car which is already parked" do
     car = Car.new
-    car.park("Some Place")
+    car.park(@garage)
 
-    lambda { car.park("new place") }.should raise_error('Car already parked!')
+    lambda { car.park(@garage) }.should raise_error('Car already parked!')
   end
 
   it "should be capable of being retreived from parking" do
     car = Car.new
-    car.park("Panchsheel Tech Park")
+    car.park(@garage)
     car.retrieve
 
     car.parked?.should be_false
-    car.location.should be_empty
+    car.garage.should be_nil
   end
 
   it "should not be able to retrieve a car which is not parked" do
