@@ -32,4 +32,29 @@ describe Garage do
     cars.first.retrieve
     garage.full?.should be_false
   end
+
+  it "should return correctly whether the garage is 80% full" do
+    capacity = 10
+    garage = Garage.new(capacity)
+
+    extent = (80.0/100.0)
+    garage.full?(extent).should be_false
+
+    (capacity * extent).round.times {Car.new.park(garage)}
+
+    garage.full?(extent).should be_true
+  end
+
+  it "should return correctly whether the garage is not 80% full" do
+    capacity = 10
+    garage = Garage.new(capacity)
+
+    extent = (80.0/100.0)
+    garage.full?(extent).should be_false
+
+    (capacity * (70/100.0)).round.times {Car.new.park(garage)}
+
+    garage.full?(extent).should be_false
+  end
+
 end

@@ -4,8 +4,8 @@ class Garage
     @cars << car
   end
 
-  def full?
-    @capacity == @cars.count
+  def full?(extent = 100/100)
+    (@capacity * extent) == @cars.count
   end
 
   def initialize(capacity)
