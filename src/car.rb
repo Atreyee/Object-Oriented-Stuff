@@ -1,10 +1,10 @@
 class Car
 
-  attr_accessor :garage
-
+  attr_reader :garage
   def park(garage)
     raise 'Car already parked!' if parked?
     @garage = garage
+    @garage.add_car(self)
   end
 
   def retrieve

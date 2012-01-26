@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__), "..","src","garage")
 require File.join(File.dirname(__FILE__), "..","src","car")
 
 describe Car do
