@@ -16,4 +16,8 @@ class Garage
   def remove_car(car)
     @cars.delete(car)
   end
+
+  def has_car?(car)
+    @cars.include?(car)
+  end
 end

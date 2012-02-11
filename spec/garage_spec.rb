@@ -9,11 +9,11 @@ describe Garage do
 
     garage.full?.should be_false
 
-    (capacity - 1).times {Car.new.park(garage)}
+    (capacity - 1).times {garage.add_car(Object.new)}
 
     garage.full?.should be_false
 
-    Car.new.park(garage)
+    garage.add_car(Object.new)
     garage.full?.should be_true
   end
 
@@ -22,14 +22,14 @@ describe Garage do
     garage = Garage.new(capacity)
 
     cars = capacity.times.collect do
-      car = Car.new
-      car.park(garage)
+      car = Object.new
+      garage.add_car(car)
       car
     end
 
     garage.full?.should be_true
 
-    cars.first.retrieve
+    garage.remove_car(cars.first)
     garage.full?.should be_false
   end
 
@@ -40,7 +40,7 @@ describe Garage do
     extent = (80.0/100.0)
     garage.full?(extent).should be_false
 
-    (capacity * extent).round.times {Car.new.park(garage)}
+    (capacity * extent).round.times {garage.add_car(Object.new)}
 
     garage.full?(extent).should be_true
   end
@@ -52,9 +52,20 @@ describe Garage do
     extent = (80.0/100.0)
     garage.full?(extent).should be_false
 
-    (capacity * (70/100.0)).round.times {Car.new.park(garage)}
+    (capacity * (70/100.0)).round.times {garage.add_car(Object.new)}
 
     garage.full?(extent).should be_false
   end
 
+  it "should return correctly whether the car is found at a garage" do
+    garage = Garage.new(3)
+    car = Object.new
+    garage.add_car(car)
+    garage.has_car?(car).should be_true
+    garage.has_car?(Object.new).should be_false
+  end
+
+  it "should notify observers when a car is not found" do
+
+  end
 end
