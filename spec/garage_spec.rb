@@ -1,21 +1,19 @@
 require File.join(File.dirname(__FILE__), "..","src","garage")
 require File.join(File.dirname(__FILE__), "..","src","police")
 require File.join(File.dirname(__FILE__), "..","src","fbi_agent")
+require File.join(File.dirname(__FILE__), "..","src","owner")
 
 describe Garage do
 
-  it "should return correctly whether the garage is full" do
+  it "should notify parking lot owner when the garage is full" do
+    owner = mock(:owner, :update => "")
+    Owner.should_receive(:new).and_return(owner)
     capacity = 3
     garage = Garage.new(capacity)
 
-    garage.full?.should be_false
+    owner.should_receive(:update).with(garage, :garage_full).once
 
-    (capacity - 1).times {garage.add_car(Object.new)}
-
-    garage.full?.should be_false
-
-    garage.add_car(Object.new)
-    garage.full?.should be_true
+    capacity.times {garage.add_car(Object.new)}
   end
 
   it "should tell that the garage is not full when cars have been retrieved from the full garage" do
@@ -32,6 +30,23 @@ describe Garage do
 
     garage.remove_car(cars.first)
     garage.full?.should be_false
+  end
+
+  it "should notify parking lot owner when the garage has space again" do
+    owner = mock(:owner, :update => "")
+    Owner.should_receive(:new).and_return(owner)
+    capacity = 3
+    garage = Garage.new(capacity)
+
+    owner.should_receive(:update).with(garage, :garage_has_space).once
+
+    cars = capacity.times.collect do
+      car = Object.new
+      garage.add_car(car)
+      car
+    end
+
+    garage.remove_car(cars.first)
   end
 
   it "should return correctly whether the garage is 80% full" do
@@ -58,14 +73,6 @@ describe Garage do
     garage.full?(extent).should be_false
   end
 
-  it "should return correctly whether the car is found at a garage" do
-    garage = Garage.new(3)
-    car = Object.new
-    garage.add_car(car)
-    garage.has_car?(car).should be_true
-    garage.has_car?(Object.new).should be_false
-  end
-
   it "should notify police when a car is not found" do
     police = mock(:police, :update => "")
     Police.should_receive(:new).and_return(police)
@@ -74,7 +81,7 @@ describe Garage do
     garage.add_car(car)
     garage.should_receive(:has_car?).with(car).and_return(false)
 
-    police.should_receive(:update).with(car)
+    police.should_receive(:update).with(car, :car_not_found)
 
     garage.remove_car(car)
   end
@@ -87,7 +94,7 @@ describe Garage do
     garage.add_car(car)
     garage.should_receive(:has_car?).with(car).and_return(false)
 
-    agent.should_receive(:update).with(car)
+    agent.should_receive(:update).with(car, :car_not_found)
 
     garage.remove_car(car)
   end
