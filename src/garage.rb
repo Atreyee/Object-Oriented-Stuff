@@ -1,4 +1,6 @@
+require 'observer'
 class Garage
+  include Observable
 
   def add_car(car)
     @cars << car
@@ -11,10 +13,17 @@ class Garage
   def initialize(capacity)
     @capacity = capacity
     @cars = []
+    add_observer Police.new
+    add_observer FBIAgent.new
   end
 
   def remove_car(car)
-    has_car?(car) ? @cars.delete(car) : Police.new.send_apb(car)
+    if has_car?(car)
+      @cars.delete(car)
+    else
+      changed
+      notify_observers(car)
+    end
   end
 
   def has_car?(car)

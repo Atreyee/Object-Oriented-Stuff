@@ -1,5 +1,6 @@
 require File.join(File.dirname(__FILE__), "..","src","garage")
 require File.join(File.dirname(__FILE__), "..","src","police")
+require File.join(File.dirname(__FILE__), "..","src","fbi_agent")
 
 describe Garage do
 
@@ -66,15 +67,29 @@ describe Garage do
   end
 
   it "should notify police when a car is not found" do
+    police = mock(:police, :update => "")
+    Police.should_receive(:new).and_return(police)
     garage = Garage.new(3)
     car = Object.new
     garage.add_car(car)
-
     garage.should_receive(:has_car?).with(car).and_return(false)
-    police = mock(:police)
-    Police.should_receive(:new).and_return(police)
-    police.should_receive(:send_apb).with(car)
+
+    police.should_receive(:update).with(car)
 
     garage.remove_car(car)
   end
+
+  it "should notify fbi agent when a car is not found" do
+    agent = mock(:fbi_agent, :update => "")
+    FBIAgent.should_receive(:new).and_return(agent)
+    garage = Garage.new(3)
+    car = Object.new
+    garage.add_car(car)
+    garage.should_receive(:has_car?).with(car).and_return(false)
+
+    agent.should_receive(:update).with(car)
+
+    garage.remove_car(car)
+  end
+
 end
