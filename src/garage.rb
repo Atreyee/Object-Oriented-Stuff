@@ -14,7 +14,7 @@ class Garage
   end
 
   def remove_car(car)
-    @cars.delete(car)
+    has_car?(car) ? @cars.delete(car) : Police.new.send_apb(car)
   end
 
   def has_car?(car)

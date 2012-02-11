@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), "..","src","garage")
-require File.join(File.dirname(__FILE__), "..","src","car")
+require File.join(File.dirname(__FILE__), "..","src","police")
 
 describe Garage do
 
@@ -65,7 +65,16 @@ describe Garage do
     garage.has_car?(Object.new).should be_false
   end
 
-  it "should notify observers when a car is not found" do
+  it "should notify police when a car is not found" do
+    garage = Garage.new(3)
+    car = Object.new
+    garage.add_car(car)
 
+    garage.should_receive(:has_car?).with(car).and_return(false)
+    police = mock(:police)
+    Police.should_receive(:new).and_return(police)
+    police.should_receive(:send_apb).with(car)
+
+    garage.remove_car(car)
   end
 end
