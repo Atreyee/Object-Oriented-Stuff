@@ -51,8 +51,13 @@ describe Garage do
     garage = Garage.new(capacity)
 
     extent = (80.0/100.0)
-    agent.should_receive(:update).with(garage, :garage_eighty_percent_full).once
-    (capacity * extent).round.times {garage.add_car(Object.new)}
+    agent.should_receive(:update).with(garage, :garage_no_longer_eighty_percent_full).once
+    cars = (capacity * extent).round.times.collect do
+      car = Object.new
+      garage.add_car(car)
+      car
+    end
+    garage.remove_car(cars.first)
   end
 
   it "should notify police when a car is not found" do
